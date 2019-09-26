@@ -1,4 +1,4 @@
-Code for simulation part.
+Counter example that non-functional approach do better.
 
 The code should be ran by following order:
 1. Run model setting code to get the model.
