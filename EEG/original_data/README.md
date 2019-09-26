@@ -1,1 +1,1 @@
-This is the data downloaded from https://kdd.ics.uci.edu/databases/eeg/eeg.data.html. There is also code that used for unzipping the downloaded package.
+This is the data downloaded from https://kdd.ics.uci.edu/databases/eeg/eeg.data.html. The link for databases is: https://kdd.ics.uci.edu/databases/eeg/. Select eeg_full.tar. There is also code that used for unzipping the downloaded package.
