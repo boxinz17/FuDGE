@@ -1,1 +1,1 @@
-The code and result for simulation.
+The code for simulation.
