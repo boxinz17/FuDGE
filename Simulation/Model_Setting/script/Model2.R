@@ -1,8 +1,7 @@
 p.v <- c(30, 60, 90, 120)
 
-save.path <- ""  # path to save the model
-
-func.path <- ""  # path saving function definitions
+save.path <- ""
+func.path <- ""
 
 source(paste(func.path,"Graph_Genertation_Model2_zerodiag.R", sep="/"))
 
@@ -10,8 +9,6 @@ for (p in p.v){
   g <- Graph_Generation_Model2(p, m=5, s=4, seed=233)
   save(g, file=paste(save.path, "/model2_p", p, ".RData", sep=""))
 }
-# to load data, run for example:
-# load(paste(save.path, "/model2_p", p, ".RData", sep=""))
 
 for (p in p.v){
   load(paste(save.path, "/model2_p", p, ".RData", sep=""))

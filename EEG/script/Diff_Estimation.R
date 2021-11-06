@@ -1,8 +1,6 @@
-# Estimate the differential graph of EEG data
-
 ####################### Part 1 Preparation #############################################
-file.path <- ""  # file path
-func.path <- ""  # function definitions path
+file.path <- paste("E:/Research/Projects/FuDGE/Code/EEG", sep="")
+func.path <- paste("E:/Research/Projects/FuDGE/Code/EEG/Function_Definitions", sep="")
 # Load the data, library and self-defined functions
 library(Matrix)
 library(MASS)
@@ -247,37 +245,32 @@ M.selected <- ceiling((M.selected.X + M.selected.Y) / 2)
 
 # Use selected L and M to estimate the principal component scores matrix
 
-## First for X
-n <- N.alco
-principle.score.X <- matrix(rep(0, n), nrow=n)
+principle.score.X <- matrix(0, nrow=n, ncol=1)
+principle.score.Y <- matrix(0, nrow=n, ncol=1)
 for (j in 1:p){
-  obs.val.matrix <- matrix(rep(0, (n * obo)), nrow=obo)
-  for (i in 1:n){
-    obs.val.vec <- as.vector(observ.X[i, j, ])
-    obs.val.matrix[, i] <- obs.val.vec
-  }
-  bbasis <- create.bspline.basis(rangeval=c(0, 1), nbasis=L.selected)
-  fd.object.array <- Data2fd(argvals=u.X, y=obs.val.matrix, basisobj=bbasis)
-  fd.pca.obj <- pca.fd(fd.object.array, nharm=M.selected)
-  principle.score.X <- cbind(principle.score.X, fd.pca.obj$scores)
-}
-principle.score.X <- principle.score.X[, -1]
-
-## Then for Y
-n <- N.contrl
-principle.score.Y <- matrix(rep(0, n), nrow=n)
-for (j in 1:p){
-  obs.val.matrix <- matrix(rep(0, (n * obo)), nrow=obo)
+  obs.val.matrix.X <- matrix(rep(0, (n * obo)), nrow=obo)
+  obs.val.matrix.Y <- matrix(rep(0, (n * obo)), nrow=obo)
   for (i in c(1:n)){
-    obs.val.vec <- as.vector(observ.Y[i, j, ])
-    obs.val.matrix[, i] <- obs.val.vec
+    obs.val.matrix.X[, i] <- as.vector(observ.X[i, j, ])
+    obs.val.matrix.Y[, i] <- as.vector(observ.Y[i, j, ])
   }
   bbasis <- create.bspline.basis(rangeval=c(0, 1), nbasis=L.selected)
-  fd.object.array <- Data2fd(argvals=u.Y, y=obs.val.matrix, basisobj=bbasis)
-  fd.pca.obj <- pca.fd(fd.object.array, nharm=M.selected)
-  principle.score.Y <- cbind(principle.score.Y, fd.pca.obj$scores)
+  
+  fd.object.array.X <- Data2fd(argvals=u.X, y=obs.val.matrix.X, basisobj=bbasis)
+  fd.object.array.Y <- Data2fd(argvals=u.X, y=obs.val.matrix.Y, basisobj=bbasis)
+  
+  fd.pca.obj.X <- pca.fd(fd.object.array.X, nharm=M.selected)
+  fd.pca.obj.Y <- pca.fd(fd.object.array.Y, nharm=M.selected)
+  fd.pca.obj <- pca.fd(fd.object.array.X+fd.object.array.Y, nharm=M.selected)
+  
+  proj.score.X <- inprod(fd.object.array.X, fd.pca.obj$harmonics, rng=c(0,1))
+  proj.score.Y <- inprod(fd.object.array.Y, fd.pca.obj$harmonics, rng=c(0,1))
+  
+  principle.score.X <- cbind(principle.score.X, proj.score.X)
+  principle.score.Y <- cbind(principle.score.Y, proj.score.Y)
 }
-principle.score.Y <- principle.score.Y[, -1]
+principle.score.X <- principle.score.X[,-1]
+principle.score.Y <- principle.score.Y[,-1]
 
 # Use estimated principle components scores matrix to estimate covariance matrix of
 # principle components, both for X and Y
