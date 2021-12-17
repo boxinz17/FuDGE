@@ -20,9 +20,9 @@ AUC_Func <- function(v.FPR, v.TPR){
     #   stop("Error: FPR decreases")
     # }
     
-    if (v.FPR[k] > v.FPR[k+1]){
-      stop("Error: FPR decreases")
-    }
+    # if (v.FPR[k] > v.FPR[k+1]){
+    #   stop("Error: FPR decreases")
+    # }
     
     h1 <- v.TPR[k]
     h2 <- v.TPR[k+1]

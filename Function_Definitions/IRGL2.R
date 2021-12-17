@@ -1,4 +1,4 @@
-source("ConstrainedL2.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/experiment_1/Function_Definitions/ConstrainedL2.R")
 
 IRGL2 <- function(Aarr, bvec, lambda, p, M, n.iteration=100, stop.criterion=0.05){
   # Use Iterative approach to solve group L2 norm with max element constraint

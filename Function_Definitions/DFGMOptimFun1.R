@@ -1,6 +1,6 @@
-source("ConstrainedL2.R")
-source("MatOrg.R")
-source("IRGL2.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/experiment_1/Function_Definitions/ConstrainedL2.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/experiment_1/Function_Definitions/MatOrg.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/experiment_1/Function_Definitions/IRGL2.R")
 
 
 DFGMOptimFun1 <- function(SigmahatX, SigmahatY, lambda, gamma, p, M, n.iteration=100, stop.criterion=0.05){

@@ -24,7 +24,7 @@ object_func <- function(cov.X, cov.Y, Delta, lambda, M){
   return(part1-part2+part3)
 }
 
-ProxAlg_DFGM <- function(cov.X, cov.Y, p, M, lambda, Eta="Auto", n.iteration=2000, Intialization=matrix(0, nrow=(p*M), ncol=(p*M))){
+ProxAlg_DFGM <- function(cov.X, cov.Y, p, M, lambda, Eta="Auto", n.iteration=2000, Intialization=matrix(0, nrow=(p*M), ncol=(p*M)), e_tol=1e-3){
   # Optimzation function to solve the optimization problem in DFGM
   # Use Proximal Algorithm
   # 
@@ -73,7 +73,7 @@ ProxAlg_DFGM <- function(cov.X, cov.Y, p, M, lambda, Eta="Auto", n.iteration=200
     Delta.new <- Delta
     obj.new <- object_func(cov.X, cov.Y, Delta.new, lambda, M)
     
-    if (abs((obj.new-obj.old)/(obj.old+1e-15)) < 1e-3){
+    if (abs((obj.new-obj.old)/(obj.old+1e-15)) < e_tol){
       converge.indicator <- TRUE
       Delta.hat <- 0.5 * (Delta.new + t(Delta.new))
       Delta.frob <- blockwise_Frob(Delta.hat, M)

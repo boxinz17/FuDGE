@@ -17,8 +17,16 @@ Avg_ROC <- function(ROC_list, v.FPR){
     } else {
       TPR.record <- numeric(M)
       for (j in 1:M){
-        ROC_FPR <- ROC_list[[j]][, 2]
-        ROC_TPR <- ROC_list[[j]][, 1]
+        ROC_FPR <- ROC_list[[j]][, "FPR"]
+        ROC_TPR <- ROC_list[[j]][, "TPR"]
+        
+        if (ROC_FPR[length(ROC_FPR)] < 1){
+          ROC_FPR <- c(ROC_FPR, 1)
+          ROC_TPR <- c(ROC_TPR, 1)
+        } else if (ROC_TPR[length(ROC_TPR)] < 1){
+          ROC_FPR <- c(ROC_FPR, 1)
+          ROC_TPR <- c(ROC_TPR, 1)
+        }
         
         index <- sum(brk.pt>ROC_FPR)
         if (index == 0){

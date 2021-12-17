@@ -78,13 +78,7 @@ Graph_Generation_PowLaw <- function(p, m, alpha, seed){
         b <- runif(1, min = -0.5, max = -0.2)
       }
       
-      subblock <- matrix(0, nrow=m, ncol=m)
-      for (i in 1:(m-2)){
-        subblock[i,i+2] <- b
-        subblock[i+2,i] <- b
-      }
-      
-      Pre.mat.X[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)] <- subblock
+      Pre.mat.X[((i-1)*m+1):(i*m), ((j-1)*m+1):(j*m)] <- diag(b, nrow=m, ncol=m)
     }
   }
   Pre.mat.X <- 0.5 * (Pre.mat.X + t(Pre.mat.X))  # average to get symmetric matrix
@@ -133,10 +127,41 @@ Graph_Generation_PowLaw <- function(p, m, alpha, seed){
   edg.change <- neighbor.list[[i]][order(magnitude.v, decreasing=T)[1:floor(0.2*edg.num.v[i])]]
   
   for (j in edg.change){
+    a <- sample(c(-1, 1), size=1)
+    if (a > 0){
+      b <- runif(1, min = 0.2, max = 0.5)
+    } else {
+      b <- runif(1, min = -0.5, max = -0.2)
+    }
+    
+    if (p <= 30){
+      b <- b / 2
+    } else if (p <= 60){
+      b <- b / 3
+    } else if (p <= 90){
+      b <- b / 4
+    } else if (p<=120) {
+      b <- b / 5
+    } else {
+      b <- b / 6
+    }
+    
+    subblock <- matrix(b, nrow=m, ncol=m)
+    diag(subblock) <- 0
+    for (i in 1:(m-1)){
+      subblock[i,i+1] <- 0
+      subblock[i+1,i] <- 0
+    }
+    for (i in 1:(m-2)){
+      subblock[i,i+2] <- 0
+      subblock[i+2,i] <- 0
+    }
+    
     Pre.mat.Y[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)] <- 
-      -Pre.mat.X[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)]
+      Pre.mat.X[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)] + subblock
     Pre.mat.Y[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)] <- 
-      -Pre.mat.X[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)]
+      Pre.mat.X[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)] + subblock
+    
     support.delta[i, j] <- 1
     support.delta[j, i] <- 1
   }
@@ -157,12 +182,53 @@ Graph_Generation_PowLaw <- function(p, m, alpha, seed){
                                    [1:floor(0.2*edg.num.v[i])]]
   
   for (j in edg.change){
+    a <- sample(c(-1, 1), size=1)
+    if (a > 0){
+      b <- runif(1, min = 0.2, max = 0.5)
+    } else {
+      b <- runif(1, min = -0.5, max = -0.2)
+    }
+    
+    if (p <= 30){
+      b <- b / 2
+    } else if (p <= 60){
+      b <- b / 3
+    } else if (p <= 90){
+      b <- b / 4
+    } else if (p<=120) {
+      b <- b / 5
+    } else {
+      b <- b / 6
+    }
+    
+    subblock <- matrix(b, nrow=m, ncol=m)
+    diag(subblock) <- 0
+    for (i in 1:(m-1)){
+      subblock[i,i+1] <- 0
+      subblock[i+1,i] <- 0
+    }
+    for (i in 1:(m-2)){
+      subblock[i,i+2] <- 0
+      subblock[i+2,i] <- 0
+    }
+    
     Pre.mat.Y[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)] <- 
-      -Pre.mat.X[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)]
+      Pre.mat.X[((i - 1) * m + 1):(i * m), ((j - 1) * m + 1):(j * m)] + subblock
     Pre.mat.Y[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)] <- 
-      -Pre.mat.X[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)]
+      Pre.mat.X[((j - 1) * m + 1):(j * m), ((i - 1) * m + 1):(i * m)] + subblock
+    
     support.delta[i, j] <- 1
     support.delta[j, i] <- 1
+  }
+  
+  if (!is.positive.definite(Pre.mat.X)){
+    eg <- eigen(Pre.mat.X)$values
+    Pre.mat.X <- Pre.mat.X + diag(abs(eg[length(eg)])+0.05, nrow=(m*p), ncol=(m*p))
+  }
+  
+  if (!is.positive.definite(Pre.mat.Y)){
+    eg <- eigen(Pre.mat.Y)$values
+    Pre.mat.Y <- Pre.mat.Y + diag(abs(eg[length(eg)])+0.05, nrow=(m*p), ncol=(m*p))
   }
   
   return(list(X=Pre.mat.X, Y=Pre.mat.Y, SupportX=support.X, 

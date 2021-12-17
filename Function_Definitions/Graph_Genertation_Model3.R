@@ -51,7 +51,7 @@ Graph_Generation_Model3 <- function(p, m, s=4, seed=667){
     support.delta[j, i] <- 1
     num.change <- sum(support.delta)/2
     
-    c <- runif(1, min=0.6, max=1)
+    c <- runif(1, min=0.8, max=1)
     
     if (p <= 30){
       c <- c / 2

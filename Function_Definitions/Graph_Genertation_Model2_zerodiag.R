@@ -34,31 +34,30 @@ Graph_Generation_Model2 <- function(p, m, s=4, seed=233){
     support.delta[i, i+3] <- 1
     support.delta[i+3, i] <- 1
     
-    c <- 0.2
+    c <- 0.1
     
-    if (p <= 30){
-      c <- c / 2
-    } else if (p <= 60){
-      c <- c / 3
-    } else if (p <= 90){
-      c <- c / 4
-    } else {
-      c <- c / 5
-    }
+    # c <- 0.2
+    # 
+    # if (p <= 30){
+    #   c <- c / 2
+    # } else if (p <= 60){
+    #   c <- c / 3
+    # } else if (p <= 90){
+    #   c <- c / 4
+    # } else {
+    #   c <- c / 5
+    # }
     
     subblock <- matrix(c, nrow=m, ncol=m)
-    diag(subblock) <- 0
-    for (i in 1:(m-1)){
-      subblock[i,i+1] <- 0
-      subblock[i+1,i] <- 0
-    }
+    # diag(subblock) <- 0
+    # for (i in 1:(m-1)){
+    #   subblock[i,i+1] <- 0
+    #   subblock[i+1,i] <- 0
+    # }
     
     U[((i-1)*m+1):(i*m), ((i+2)*m+1):((i+3)*m)] <- subblock
     U[((i+2)*m+1):((i+3)*m), ((i-1)*m+1):(i*m)] <- subblock
   }
-  
-  # eg <- eigen(Omega.star)$values
-  # Omega.star <- Omega.star + diag(abs(eg[length(eg)]), nrow=(p*m), ncol=(p*m))
   
   Pre.mat.X <- Omega.star
   Pre.mat.Y <- Pre.mat.X + U

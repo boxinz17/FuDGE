@@ -1,8 +1,9 @@
 ################## Part 0: Preparation #########################################
 
 # Load the library and functions
-source("Graph_Genertation_PowLaw.R")
-source("ProxAlg_FGM.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/Function_Definitions/Graph_Genertation_PowLaw.R")
+source("E:/学习工作/硕士/graduate research/code/Differential Functional Graphical Model/Function_Definitions/ProxAlg_FGM.R")
+
 
 library(Matrix)
 library(MASS)
